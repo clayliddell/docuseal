@@ -244,6 +244,12 @@ module Templates
 
       text_nodes = page.text_nodes
 
+      if tail_node.page != page.page_index
+        text_node = PageNode.new(prev: tail_node, elem: ''.b, page: page.page_index, attachment_uuid:)
+        tail_node.next = text_node
+        tail_node = text_node
+      end
+
       current_field = fields.shift
 
       index = 0

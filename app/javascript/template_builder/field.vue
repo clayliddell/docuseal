@@ -57,6 +57,16 @@
           v-else-if="editable"
           class="flex items-center space-x-1"
         >
+          <span
+            v-if="field.preferences?.detected_submitter?.review"
+            class="relative text-warning flex items-center"
+            :title="field.preferences.detected_submitter.reason || 'Review autodetected party assignment'"
+          >
+            <IconInfoCircle
+              :width="18"
+              :stroke-width="1.6"
+            />
+          </span>
           <button
             v-if="field && !field.areas?.length"
             :title="t('draw')"
@@ -324,7 +334,7 @@ import FormulaModal from './formula_modal'
 import FontModal from './font_modal'
 import ConditionsModal from './conditions_modal'
 import DescriptionModal from './description_modal'
-import { IconRouteAltLeft, IconMathFunction, IconNewSection, IconTrashX, IconSettings, IconChevronDown } from '@tabler/icons-vue'
+import { IconRouteAltLeft, IconMathFunction, IconNewSection, IconTrashX, IconSettings, IconChevronDown, IconInfoCircle } from '@tabler/icons-vue'
 import { v4 } from 'uuid'
 
 export default {
@@ -343,6 +353,7 @@ export default {
     IconRouteAltLeft,
     IconTrashX,
     IconMathFunction,
+    IconInfoCircle,
     FieldType
   },
   inject: ['template', 'backgroundColor', 'selectedAreasRef', 't', 'locale', 'getFieldTypeIndex', 'dateFormats'],

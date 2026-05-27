@@ -15,7 +15,7 @@
       :allow-add-new="!defaultSubmitters.length"
       :menu-classes="'dropdown-content bg-white menu menu-xs p-2 shadow rounded-box w-52 rounded-t-none -left-[1px] mt-[1px]'"
       :submitters="template.submitters"
-      @update:model-value="$emit('change')"
+      @update:model-value="onSubmitterChange"
       @click="selectedAreasRef.value = [area]"
     />
     <FieldType
@@ -27,6 +27,13 @@
       @update:model-value="[maybeUpdateOptions(), $emit('change')]"
       @click="selectedAreasRef.value = [area]"
     />
+    <span
+      v-if="field.preferences?.detected_submitter?.review"
+      class="flex items-center text-warning px-1"
+      :title="field.preferences.detected_submitter.reason || 'Review autodetected party assignment'"
+    >
+      <IconInfoCircle class="w-4 h-4" />
+    </span>
     <span
       v-if="field.type !== 'checkbox' || field.name"
       ref="name"
@@ -199,7 +206,7 @@ import FormulaModal from './formula_modal'
 import FontModal from './font_modal'
 import ConditionsModal from './conditions_modal'
 import DescriptionModal from './description_modal'
-import { IconX, IconDotsVertical } from '@tabler/icons-vue'
+import { IconX, IconDotsVertical, IconInfoCircle } from '@tabler/icons-vue'
 import { v4 } from 'uuid'
 
 export default {
@@ -213,6 +220,7 @@ export default {
     DescriptionModal,
     ConditionsModal,
     FieldSubmitter,
+    IconInfoCircle,
     IconX
   },
   inject: ['t'],
@@ -321,6 +329,13 @@ export default {
     buildDefaultName: Field.methods.buildDefaultName,
     closeDropdown () {
       this.$el.getRootNode().activeElement.blur()
+    },
+    onSubmitterChange () {
+      if (this.field.preferences?.detected_submitter) {
+        delete this.field.preferences.detected_submitter
+      }
+
+      this.$emit('change')
     },
     maybeBlurSettings (e) {
       if (!e.relatedTarget || !this.$refs.settingsDropdown.contains(e.relatedTarget)) {
